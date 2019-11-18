@@ -15,7 +15,7 @@ bot.on('message', async (message) => {
         //dont bully over gay if statement cba to do it propperly
         if(str.includes('discord.gift/')) {
             var codeUntrimmed = message.content.split('discord.gift/').pop();
-            var code = codeUntrimmed.substring(0, 24);
+            var code = codeUntrimmed.substring(0, 16);
             request.post('https://discordapp.com/api/v6/entitlements/gift-codes/' + code + '/redeem', {
                 headers: {
                     'Authorization': token
@@ -28,7 +28,7 @@ bot.on('message', async (message) => {
             });
         } else if(str.includes('discordapp.com/gifts/')) {
             var codeUntrimmed = message.content.split('discordapp.com/gifts/').pop();
-            var code = codeUntrimmed.substring(0, 24);
+            var code = codeUntrimmed.substring(0, 16);
             request.post('https://discordapp.com/api/v6/entitlements/gift-codes/' + code + '/redeem', {
                 headers: {
                     'Authorization': token
