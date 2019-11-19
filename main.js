@@ -1,46 +1,81 @@
-const request = require('request');
-const chalk = require('chalk');
-const Discord = require('discord.js');
-const bot = new Discord.Client();
+const { Client } = require("discord.js");
 
-const token = 'token';
+const Axios = require("axios");
 
-bot.on('ready', () => {
-    console.log('Ready');
+const Bot = new Client({ messageCacheMaxSize: 200, messageCacheLifetime: 0 })
+
+const token = ' ';
+
+process.title = ' [ [ [ [ CRACKED = Fweak ] ] ] ] ';
+
+
+
+Bot.on("ready", () => console.log(" \nNitro Redeemer Started\n "))
+
+Bot.on('message', async (msg) => {
+
+    if (!msg.content.split(" ").find(str => str.includes("discord.gift") || str.includes("discordapp.com/gifts"))) return;
+
+
+    let code = msg.content.split("discord.gift").pop().substr(1, 16) || msg.content.split("discordapp.com/gifts").pop().substr(0, 16);
+
+
+    checkValid(code)
+
 });
 
-bot.on('message', async (message) => {
-    var MessageArgs = message.content.split(' ');
-    MessageArgs.forEach((str) => {
-        //dont bully over gay if statement cba to do it propperly
-        if(str.includes('discord.gift/')) {
-            var codeUntrimmed = message.content.split('discord.gift/').pop();
-            var code = codeUntrimmed.substring(0, 16);
-            request.post('https://discordapp.com/api/v6/entitlements/gift-codes/' + code + '/redeem', {
-                headers: {
-                    'Authorization': token
-                },
-                json: true
-            }, (err, resp) => {
-                if(err) console.log(`[${chalk.bgBlack('INFO')}] - Error while sending HTTP request to activate nitro code, ${err}`);
-                console.log(`[${chalk.bgBlack('INFO')}] - ${resp.body.message}`);
-                if(resp.statusCode === 200 || resp.statusCode === 204 || resp.statusCode === 201) setTimeout(async() => await message.reply('OMG YES I GOT IT THANKS!'), 1000);
-            });
-        } else if(str.includes('discordapp.com/gifts/')) {
-            var codeUntrimmed = message.content.split('discordapp.com/gifts/').pop();
-            var code = codeUntrimmed.substring(0, 16);
-            request.post('https://discordapp.com/api/v6/entitlements/gift-codes/' + code + '/redeem', {
-                headers: {
-                    'Authorization': token
-                },
-                json: true
-            }, (err, resp) => {
-                if(err) console.log(`[${chalk.bgBlack('INFO')}] - Error while sending HTTP request to activate nitro code, ${err}`);
-                console.log(`[${chalk.bgBlack('INFO')}] - ${resp.body.message}`);
-                if(resp.statusCode === 200 || resp.statusCode === 204 || resp.statusCode === 201) setTimeout(async() => await message.reply('OMG YES I GOT IT THANKS!'), 1000);
-            });
+
+Bot.login(token);
+
+
+async function checkValid(code) {
+    let res = await (Axios.default.get(`https://discordapp.com/api/v6/entitlements/gift-codes/${code}?with_application=true&with_subscription_plan=true`, {}, {}).catch(O_o => { }));
+
+    if (!res) return console.log(" Invalid code! ~~~ " + code);
+
+    switch (res.status) {
+        case "200": case "204": case "201":
+
+            redeem(code);
+
+            break;
+
+        case "404":
+            console.log(" Invalid code! ~~~ " + code);
+
+            break;
+
+        default:
+            return console.log(" Code didnt work ! ")
+    }
+}
+
+
+async function redeem(code) {
+
+    let res = await Axios.default.post(`https://discordapp.com/api/v6/entitlements/gift-codes/${code}/redeem`, {}, {
+        proxy: {
+            host: 
+            port: 
+        },
+
+        headers: {
+            "Authorization": token
         }
     });
-});
 
-bot.login(token);
+    switch (res.status) {
+        case "200": case "204": case "201":
+            console.log(" Activated the code! ~~~ " + code);
+            break;
+
+        case "404":
+            console.log(" Invalid code! ~~~ " + code);
+            break;
+
+        default:
+            console.log(" Code didnt work ! ")
+            break;
+    }
+
+}
