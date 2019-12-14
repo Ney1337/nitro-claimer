@@ -1,1 +1,1 @@
-#Freak's nitro claimer but fixed for hosting.
+# Freak's nitro claimer but fixed for hosting.
